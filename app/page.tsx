@@ -43,7 +43,7 @@ export default function Home() {
             className="object-cover scale-110"
           />
         </motion.div>
-        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/20 to-[var(--background)] z-1" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/40 to-[var(--background)] z-1" />
 
         <motion.div
           style={{ opacity }}
@@ -56,15 +56,15 @@ export default function Home() {
             initial={{ opacity: 0, letterSpacing: "0.2em" }}
             animate={{ opacity: 1, letterSpacing: "0.6em" }}
             transition={{ delay: 0.5, duration: 1 }}
-            className="text-[10px] uppercase mb-6 block font-bold text-[var(--accent)]"
+            className="text-[10px] uppercase mb-6 block font-bold text-[var(--accent)] drop-shadow-md"
           >
             Edición Lujo 2026
           </motion.span>
-          <h1 className="hero-text mb-8 tracking-tighter family-playfair italic lowercase opacity-90">
+          <h1 className="hero-text mb-8 tracking-tighter family-playfair italic lowercase drop-shadow-2xl">
             Guatemala<br />
-            <span className="text-[var(--accent)] not-italic uppercase tracking-widest text-4xl block mt-4 font-black">Inmortal</span>
+            <span className="text-[var(--accent)] not-italic uppercase tracking-widest text-4xl block mt-4 font-black drop-shadow-xl">Inmortal</span>
           </h1>
-          <p className="max-w-xl mx-auto text-lg md:text-xl opacity-80 mb-12 font-light leading-relaxed">
+          <p className="max-w-xl mx-auto text-lg md:text-xl mb-12 font-light leading-relaxed drop-shadow-md">
             Una travesía curada por el corazón del mundo Maya.
           </p>
           <div className="flex flex-wrap justify-center gap-6">

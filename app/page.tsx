@@ -21,7 +21,7 @@ export default function Home() {
       <motion.nav
         initial={{ y: -100 }}
         animate={{ y: 0 }}
-        className="fixed top-0 w-full z-50 glass px-4 md:px-8 py-4 md:py-5 flex justify-between items-center transition-all bg-white/10 dark:bg-black/10 backdrop-blur-xl border-b border-white/10"
+        className="fixed top-0 w-full z-50 glass px-4 md:px-8 py-4 md:py-5 flex justify-between items-center transition-all bg-white/10 backdrop-blur-xl border-b border-white/10"
       >
         <div className="text-xl md:text-2xl font-black uppercase tracking-tighter family-playfair italic">Guatemala</div>
         <div className="flex gap-4 md:gap-10 text-[10px] md:text-[11px] items-center font-bold uppercase tracking-[0.2em] md:tracking-[0.3em] hidden sm:flex">
@@ -166,8 +166,8 @@ export default function Home() {
           </div>
 
           <div className="lg:col-span-3">
-            <div className="overflow-x-auto rounded-3xl border border-slate-100 dark:border-slate-800 shadow-xl">
-              <table className="w-full text-left border-collapse bg-white dark:bg-slate-900">
+            <div className="overflow-x-auto rounded-3xl border border-slate-100 shadow-xl">
+              <table className="w-full text-left border-collapse bg-white">
                 <thead className="bg-[var(--primary)] text-white">
                   <tr className="text-[8px] md:text-[9px] font-black uppercase tracking-[0.2em] md:tracking-[0.3em] opacity-80">
                     <th className="p-4 md:p-8">Servicio</th>
@@ -178,7 +178,7 @@ export default function Home() {
                 </thead>
                 <tbody>
                   {contactSummary.map((item, idx) => (
-                    <tr key={idx} className="border-b border-slate-50 dark:border-slate-800 hover:bg-slate-50/50 transition-colors">
+                    <tr key={idx} className="border-b border-slate-50 hover:bg-slate-50/50 transition-colors">
                       <td className="p-4 md:p-8 font-black text-[10px] md:text-xs family-playfair italic underline decoration-[var(--accent)]/30">{item.service}</td>
                       <td className="p-4 md:p-8 text-[11px] md:text-sm opacity-80">{item.name}</td>
                       <td className="p-4 md:p-8 text-[10px] md:text-xs font-bold leading-none">{item.phone}</td>
@@ -211,7 +211,7 @@ export default function Home() {
                 viewport={{ once: true, margin: "-100px" }}
                 className="relative pl-24"
               >
-                <div className="absolute left-0 top-0 bottom-[-5rem] w-px bg-slate-200 dark:bg-slate-800">
+                <div className="absolute left-0 top-0 bottom-[-5rem] w-px bg-slate-200">
                   <div className="w-3 h-3 bg-[var(--accent)] rounded-full -ml-[6px] mt-2 shadow-[0_0_15px_rgba(197,160,89,0.5)]" />
                 </div>
 
@@ -231,7 +231,7 @@ export default function Home() {
                     <div className="md:col-span-2 space-y-8">
                       {day.activities.map((activity, aIdx) => (
                         <div key={aIdx} className="flex gap-6 items-start">
-                          {activity.time && <span className="text-xs font-black text-[var(--text-muted)] bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded-full uppercase tracking-widest">{activity.time}</span>}
+                          {activity.time && <span className="text-xs font-black text-[var(--text-muted)] bg-slate-100 px-3 py-1 rounded-full uppercase tracking-widest">{activity.time}</span>}
                           <div>
                             <h4 className="font-bold text-xl mb-1">{activity.title}</h4>
                             <p className="text-[var(--text-muted)] leading-relaxed text-base font-light">{activity.description}</p>
@@ -240,11 +240,11 @@ export default function Home() {
                       ))}
 
                       {day.flights && (
-                        <div className="mt-10 pt-10 border-t border-slate-100 dark:border-slate-800">
+                        <div className="mt-10 pt-10 border-t border-slate-100">
                           <h4 className="text-[10px] uppercase tracking-[0.4em] font-black mb-6 text-[var(--accent)]">Protocolo Aéreo</h4>
                           <div className="grid sm:grid-cols-2 gap-6">
                             {day.flights.map((flight, fIdx) => (
-                              <div key={fIdx} className="p-6 bg-slate-50 dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800">
+                              <div key={fIdx} className="p-6 bg-slate-50 rounded-2xl border border-slate-100">
                                 <div className="text-base font-black mb-3 family-playfair italic underline decoration-[var(--accent)]">{flight.airline} {flight.number}</div>
                                 <div className="text-sm text-[var(--text-muted)] opacity-80 font-bold mb-4">{flight.from} → {flight.to}</div>
                                 <div className="flex justify-between items-center text-xs font-black tracking-widest leading-none">
@@ -271,7 +271,7 @@ export default function Home() {
                         <p className="text-xs text-[var(--text-muted)] mb-6 opacity-100 font-medium">{day.accommodation.location}</p>
 
                         <div className="space-y-4">
-                          <div className="text-xs p-5 bg-white dark:bg-black/40 rounded-xl border border-black/10 dark:border-white/10 shadow-inner">
+                          <div className="text-xs p-5 bg-white rounded-xl border border-black/10 shadow-inner">
                             <span className="font-black block mb-2 opacity-60 tracking-[0.1em] text-[var(--text-muted)]">CHECK-IN</span>
                             <span className="font-bold text-[var(--text)]">{day.accommodation.checkIn}</span>
                           </div>

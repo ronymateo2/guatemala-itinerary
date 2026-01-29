@@ -193,23 +193,23 @@ export default function Home() {
       </section>
 
       {/* Itinerary Timeline */}
-      <section id="itinerary" className="py-32 bg-[var(--surface)] px-6 relative overflow-hidden">
+      <section id="itinerary" className="py-16 md:py-32 bg-[var(--surface)] px-4 md:px-6 relative overflow-hidden">
         <div className="absolute right-0 top-0 w-1/3 h-full bg-gradient-to-l from-[var(--accent)]/5 to-transparent pointer-events-none" />
 
         <div className="max-w-4xl mx-auto relative z-10">
           <div className="mb-24 text-center">
             <span className="text-[var(--accent)] font-bold text-[10px] uppercase tracking-[0.4em]">Calendario de Viaje</span>
-            <h2 className="text-6xl font-black family-playfair italic mt-4">Inmersión Día a Día</h2>
+            <h2 className="text-4xl md:text-6xl font-black family-playfair italic mt-4">Inmersión Día a Día</h2>
           </div>
 
-          <div className="space-y-24">
+          <div className="space-y-16 md:space-y-24">
             {itineraryData.map((day, idx) => (
               <motion.div
                 key={idx}
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true, margin: "-100px" }}
-                className="relative pl-24"
+                className="relative pl-10 md:pl-24"
               >
                 <div className="absolute left-0 top-0 bottom-[-5rem] w-px bg-slate-200">
                   <div className="w-3 h-3 bg-[var(--accent)] rounded-full -ml-[6px] mt-2 shadow-[0_0_15px_rgba(197,160,89,0.5)]" />
@@ -224,13 +224,13 @@ export default function Home() {
                   <h3 className="text-3xl md:text-4xl font-bold family-playfair lowercase tracking-tighter opacity-90">{day.title}</h3>
                 </div>
 
-                <div className="card p-6 md:p-14 overflow-hidden relative shadow-sm hover:shadow-xl group">
+                <div className="card p-5 md:p-14 overflow-hidden relative shadow-sm hover:shadow-xl group">
                   <div className="absolute top-0 right-0 w-24 md:w-32 h-24 md:h-32 bg-[var(--accent)]/5 rounded-bl-[100px] transition-all group-hover:scale-110" />
 
                   <div className="grid md:grid-cols-3 gap-8 md:gap-12">
                     <div className="md:col-span-2 space-y-8">
                       {day.activities.map((activity, aIdx) => (
-                        <div key={aIdx} className="flex gap-6 items-start">
+                        <div key={aIdx} className="flex gap-4 md:gap-6 items-start">
                           {activity.time && <span className="text-xs font-black text-[var(--text-muted)] bg-slate-100 px-3 py-1 rounded-full uppercase tracking-widest">{activity.time}</span>}
                           <div>
                             <h4 className="font-bold text-xl mb-1">{activity.title}</h4>

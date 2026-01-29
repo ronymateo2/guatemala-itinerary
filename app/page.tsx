@@ -1,240 +1,324 @@
+"use client";
+
 import Image from 'next/image';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { useRef } from 'react';
 import { itineraryData, contactSummary } from './data';
 
 export default function Home() {
+  const heroRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: heroRef,
+    offset: ["start start", "end start"]
+  });
+
+  const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
+  const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
+
   return (
     <main className="min-h-screen">
       {/* Navigation */}
-      <nav className="fixed top-0 w-full z-50 glass px-6 py-4 flex justify-between items-center transition-all">
-        <div className="text-2xl font-black uppercase tracking-tighter">Guatemala</div>
-        <div className="flex gap-8 text-sm font-medium uppercase tracking-widest hidden md:flex">
+      <motion.nav
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        className="fixed top-0 w-full z-50 glass px-4 md:px-8 py-4 md:py-5 flex justify-between items-center transition-all bg-white/10 dark:bg-black/10 backdrop-blur-xl border-b border-white/10"
+      >
+        <div className="text-xl md:text-2xl font-black uppercase tracking-tighter family-playfair italic">Guatemala</div>
+        <div className="flex gap-4 md:gap-10 text-[10px] md:text-[11px] items-center font-bold uppercase tracking-[0.2em] md:tracking-[0.3em] hidden sm:flex">
           <a href="#itinerary" className="hover:text-[var(--accent)] transition-colors">Itinerario</a>
           <a href="#contacts" className="hover:text-[var(--accent)] transition-colors">Contactos</a>
+          <a href="#locations" className="hover:text-[var(--accent)] transition-colors">Destinos</a>
         </div>
-        <a href="#itinerary" className="btn-primary text-xs">Ver Viaje</a>
-      </nav>
+        <a href="#itinerary" className="btn-primary text-[10px] md:text-[11px] font-bold tracking-[0.1em] md:tracking-[0.2em] px-4 md:px-6 py-2 md:py-3">Reserva</a>
+      </motion.nav>
 
       {/* Hero Section */}
-      <section className="relative h-screen flex items-center justify-center overflow-hidden">
-        <Image
-          src="/hero.png"
-          alt="Lake Atitlan"
-          fill
-          priority
-          className="object-cover"
-        />
-        <div className="absolute inset-0 bg-black/40" />
-        <div className="relative z-10 text-center text-white px-4 animate-fade-in">
-          <span className="text-xs uppercase tracking-[0.5em] mb-4 block font-semibold text-[var(--accent)]">Tu Aventura Inolvidable</span>
-          <h1 className="hero-text mb-6">Explora<br />Guatemala</h1>
-          <p className="max-w-xl mx-auto text-lg md:text-xl opacity-90 mb-10 font-light">
-            Un viaje de 9 días por el corazón del mundo Maya, desde las selvas de Tikal hasta las aguas mágicas de Atitlán.
+      <section ref={heroRef} className="relative h-[110vh] flex items-center justify-center overflow-hidden">
+        <motion.div style={{ y }} className="absolute inset-0 z-0">
+          <Image
+            src="/hero.png"
+            alt="Lake Atitlan"
+            fill
+            priority
+            className="object-cover scale-110"
+          />
+        </motion.div>
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/20 to-[var(--background)] z-1" />
+
+        <motion.div
+          style={{ opacity }}
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.2, ease: "easeOut" }}
+          className="relative z-10 text-center text-white px-4"
+        >
+          <motion.span
+            initial={{ opacity: 0, letterSpacing: "0.2em" }}
+            animate={{ opacity: 1, letterSpacing: "0.6em" }}
+            transition={{ delay: 0.5, duration: 1 }}
+            className="text-[10px] uppercase mb-6 block font-bold text-[var(--accent)]"
+          >
+            Edición Lujo 2026
+          </motion.span>
+          <h1 className="hero-text mb-8 tracking-tighter family-playfair italic lowercase opacity-90">
+            Guatemala<br />
+            <span className="text-[var(--accent)] not-italic uppercase tracking-widest text-4xl block mt-4 font-black">Inmortal</span>
+          </h1>
+          <p className="max-w-xl mx-auto text-lg md:text-xl opacity-80 mb-12 font-light leading-relaxed">
+            Una travesía curada por el corazón del mundo Maya.
           </p>
-          <div className="flex flex-wrap justify-center gap-4">
-            <a href="#itinerary" className="btn-primary text-lg px-10 py-4">Explorar Itinerario</a>
-            <a href="#contacts" className="glass py-4 px-8 rounded-full text-lg border border-white/20 hover:bg-white/10 transition-all">Datos de Reserva</a>
+          <div className="flex flex-wrap justify-center gap-6">
+            <motion.a
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              href="#itinerary"
+              className="btn-primary text-sm px-12 py-5"
+            >
+              Comenzar Aventura
+            </motion.a>
           </div>
-        </div>
-        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce">
-          <svg className="w-6 h-6 text-white opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-          </svg>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.5 }}
+          className="absolute bottom-16 left-1/2 -translate-x-1/2"
+        >
+          <div className="w-px h-16 bg-gradient-to-b from-[var(--accent)] to-transparent opacity-50" />
+        </motion.div>
+      </section>
+
+      {/* Stats Summary */}
+      <section className="relative -mt-20 z-20 px-6">
+        <div className="max-w-6xl mx-auto grid md:grid-cols-3 gap-1 grid-cols-1 glass rounded-3xl overflow-hidden shadow-2xl border border-white/10">
+          {[
+            { label: "Días de exploración", value: "09" },
+            { label: "Experiencias Curadas", value: "12" },
+            { label: "Vuelos de Conexión", value: "05" }
+          ].map((stat, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.2 }}
+              className="p-8 md:p-12 text-center bg-white/5 hover:bg-white/10 transition-colors border-b md:border-b-0 md:border-r border-white/5 last:border-0"
+            >
+              <h3 className="text-4xl md:text-5xl font-black mb-3 family-playfair text-[var(--accent)]">{stat.value}</h3>
+              <p className="text-[var(--text-muted)] uppercase tracking-[0.3em] text-xs font-bold">{stat.label}</p>
+            </motion.div>
+          ))}
         </div>
       </section>
 
-      {/* Summary Section */}
-      <section className="py-24 px-6 bg-[var(--surface)]">
-        <div className="max-w-6xl mx-auto grid md:grid-cols-3 gap-12">
-          <div className="text-center">
-            <h3 className="text-4xl font-bold mb-2">09</h3>
-            <p className="text-[var(--text-muted)] uppercase tracking-widest text-xs">Días Totales</p>
+      {/* Destination Showcase */}
+      <section id="locations" className="py-32 px-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex justify-between items-end mb-16">
+            <div>
+              <span className="text-[var(--accent)] font-bold text-[10px] uppercase tracking-[0.4em]">Destinos Exclusivos</span>
+              <h2 className="text-5xl font-black family-playfair italic mt-2">La Ruta Dorada</h2>
+            </div>
+            <p className="max-w-md text-[var(--text-muted)] text-right hidden md:block">
+              Cada ubicación ha sido seleccionada por su valor histórico, natural y espiritual.
+            </p>
           </div>
-          <div className="text-center">
-            <h3 className="text-4xl font-bold mb-2">04</h3>
-            <p className="text-[var(--text-muted)] uppercase tracking-widest text-xs">Destinos Clave</p>
-          </div>
-          <div className="text-center">
-            <h3 className="text-4xl font-bold mb-2">05</h3>
-            <p className="text-[var(--text-muted)] uppercase tracking-widest text-xs">Vuelos Incluidos</p>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+            {[
+              { img: "/tikal.png", title: "Selva de Tikal", desc: "El amanecer del imperio Maya." },
+              { img: "/hero.png", title: "Lago de Atitlán", desc: "El lugar más bello del mundo." },
+              { img: "/antigua.png", title: "Antigua Mística", desc: "Historia viva entre volcanes." }
+            ].map((loc, i) => (
+              <motion.div
+                key={i}
+                whileHover={{ y: -10 }}
+                className="group relative h-[400px] md:h-[500px] overflow-hidden rounded-3xl"
+              >
+                <Image src={loc.img} alt={loc.title} fill className="object-cover transition-transform duration-700 group-hover:scale-110" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
+                <div className="absolute bottom-8 left-8 md:bottom-10 md:left-10 text-white">
+                  <h4 className="text-2xl md:text-3xl font-bold family-playfair italic mb-1">{loc.title}</h4>
+                  <p className="text-white/60 text-xs md:text-sm tracking-wide">{loc.desc}</p>
+                </div>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
 
       {/* Reservation & Contact Table */}
-      <section id="contacts" className="py-24 px-6 max-w-6xl mx-auto">
-        <div className="mb-16">
-          <h2 className="text-3xl md:text-4xl font-black mb-4">Resumen de Contactos y Reservas</h2>
-          <p className="text-[var(--text-muted)]">Toda la información clave en un solo lugar.</p>
-          <div className="w-20 h-1 bg-[var(--accent)] mt-4" />
-        </div>
-        <div className="overflow-x-auto card">
-          <table className="w-full text-left border-collapse">
-            <thead>
-              <tr className="bg-[var(--primary)] text-white">
-                <th className="p-4 text-xs uppercase tracking-widest font-bold">Servicio</th>
-                <th className="p-4 text-xs uppercase tracking-widest font-bold">Nombre / Anfitrión</th>
-                <th className="p-4 text-xs uppercase tracking-widest font-bold">Teléfono</th>
-                <th className="p-4 text-xs uppercase tracking-widest font-bold">Referencia / PIN</th>
-              </tr>
-            </thead>
-            <tbody>
-              {contactSummary.map((item, idx) => (
-                <tr key={idx} className="border-b border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors">
-                  <td className="p-4 font-bold text-sm whitespace-nowrap">{item.service}</td>
-                  <td className="p-4 text-sm">{item.name}</td>
-                  <td className="p-4 text-sm font-mono">{item.phone}</td>
-                  <td className="p-4 text-sm font-mono text-[var(--accent)] font-bold">{item.ref}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        <div className="mt-8 grid md:grid-cols-2 gap-6">
-          <div className="p-6 rounded-xl bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900">
-            <h4 className="font-bold flex items-center gap-2 text-amber-800 dark:text-amber-400 mb-2">
-              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" /></svg>
-              Recordatorio: Equipaje TAG
-            </h4>
-            <p className="text-sm text-amber-700 dark:text-amber-500">
-              Vuelos a Flores son en tarifa <strong>LIGHT</strong> (solo un objeto personal de 10 lb). Cargos extra en el aeropuerto por maleta adicional.
+      {/* Contact Summary Table */}
+      <section id="contacts" className="py-32 px-6 max-w-7xl mx-auto">
+        <div className="grid lg:grid-cols-4 gap-16">
+          <div className="lg:col-span-1">
+            <span className="text-[var(--accent)] font-bold text-[10px] uppercase tracking-[0.4em]">Directorio</span>
+            <h2 className="text-5xl font-black family-playfair italic mt-4 mb-8">Información Maestra</h2>
+            <p className="text-[var(--text-muted)] text-sm leading-relaxed mb-6 font-light">
+              Soporte 24/7 y códigos de reserva centralizados para un acceso inmediato durante todo el trayecto.
             </p>
+            <div className="space-y-4 border-t pt-8">
+              <div className="text-xs">
+                <span className="font-black block mb-2 opacity-40 uppercase tracking-[0.1em]">Emergencias</span>
+                <span className="font-bold">+502 2380 9401 (Airlines)</span>
+              </div>
+            </div>
           </div>
-          <div className="p-6 rounded-xl bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-900">
-            <h4 className="font-bold flex items-center gap-2 text-blue-800 dark:text-blue-400 mb-2">
-              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z" /><path fillRule="evenodd" d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z" clipRule="evenodd" /></svg>
-              Efectivo en Flores
-            </h4>
-            <p className="text-sm text-blue-700 dark:text-blue-500">
-              Recuerda tener <strong>GTQ 200 en efectivo</strong> para el depósito de daños en Casa Ramona.
-            </p>
+
+          <div className="lg:col-span-3">
+            <div className="overflow-x-auto rounded-3xl border border-slate-100 dark:border-slate-800 shadow-xl">
+              <table className="w-full text-left border-collapse bg-white dark:bg-slate-900">
+                <thead className="bg-[var(--primary)] text-white">
+                  <tr className="text-[8px] md:text-[9px] font-black uppercase tracking-[0.2em] md:tracking-[0.3em] opacity-80">
+                    <th className="p-4 md:p-8">Servicio</th>
+                    <th className="p-4 md:p-8">Nombre</th>
+                    <th className="p-4 md:p-8">Contacto</th>
+                    <th className="p-4 md:p-8">Referencia</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {contactSummary.map((item, idx) => (
+                    <tr key={idx} className="border-b border-slate-50 dark:border-slate-800 hover:bg-slate-50/50 transition-colors">
+                      <td className="p-4 md:p-8 font-black text-[10px] md:text-xs family-playfair italic underline decoration-[var(--accent)]/30">{item.service}</td>
+                      <td className="p-4 md:p-8 text-[11px] md:text-sm opacity-80">{item.name}</td>
+                      <td className="p-4 md:p-8 text-[10px] md:text-xs font-bold leading-none">{item.phone}</td>
+                      <td className="p-4 md:p-8 text-[10px] md:text-xs font-mono font-black text-[var(--accent)]">{item.ref}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Itinerary Section */}
-      <section id="itinerary" className="py-24 px-6 max-w-5xl mx-auto">
-        <div className="mb-16 text-center">
-          <h2 className="text-4xl md:text-5xl font-black mb-4">Itinerario Detallado</h2>
-          <div className="w-20 h-1 bg-[var(--accent)] mx-auto" />
-        </div>
+      {/* Itinerary Timeline */}
+      <section id="itinerary" className="py-32 bg-[var(--surface)] px-6 relative overflow-hidden">
+        <div className="absolute right-0 top-0 w-1/3 h-full bg-gradient-to-l from-[var(--accent)]/5 to-transparent pointer-events-none" />
 
-        <div className="space-y-12">
-          {itineraryData.map((day, idx) => (
-            <div key={idx} className="relative pl-12">
-              <div className="absolute left-0 top-0 bottom-0">
-                <div className="timeline-dot" />
-                {idx < itineraryData.length - 1 && <div className="timeline-line" />}
-              </div>
-              <div className="mb-2">
-                <span className="text-sm font-bold text-[var(--accent)] uppercase tracking-widest">{day.date}</span>
-                <h3 className="text-2xl font-bold mt-1">{day.title}</h3>
-              </div>
-              <div className="card p-6 md:p-8 mt-4 grid md:grid-cols-3 gap-8">
-                <div className="md:col-span-2 space-y-4">
-                  {day.activities.map((activity, aIdx) => (
-                    <div key={aIdx} className="flex gap-4">
-                      {activity.time && <span className="text-xs font-mono font-bold text-[var(--text-muted)] pt-1 whitespace-nowrap">{activity.time}</span>}
-                      <div>
-                        <h4 className="font-bold">{activity.title}</h4>
-                        <p className="text-[var(--text-muted)] text-sm">{activity.description}</p>
-                      </div>
-                    </div>
-                  ))}
+        <div className="max-w-4xl mx-auto relative z-10">
+          <div className="mb-24 text-center">
+            <span className="text-[var(--accent)] font-bold text-[10px] uppercase tracking-[0.4em]">Calendario de Viaje</span>
+            <h2 className="text-6xl font-black family-playfair italic mt-4">Inmersión Día a Día</h2>
+          </div>
 
-                  {day.flights && (
-                    <div className="mt-6 pt-6 border-t border-slate-200 dark:border-slate-800">
-                      <h4 className="text-xs uppercase tracking-widest font-bold mb-3 flex items-center gap-2">
-                        <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" /></svg>
-                        Información de Vuelos
-                      </h4>
-                      <div className="grid sm:grid-cols-2 gap-4">
-                        {day.flights.map((flight, fIdx) => (
-                          <div key={fIdx} className="text-xs glass p-3 rounded-lg border border-[var(--accent)]/10">
-                            <div className="font-black mb-1 text-[var(--primary)] dark:text-white uppercase tracking-tighter">{flight.airline} {flight.number}</div>
-                            <div className="text-[var(--text-muted)] mb-2 font-medium">{flight.from} → {flight.to}</div>
-                            <div className="grid grid-cols-2 gap-2 mt-2 pt-2 border-t border-black/5 dark:border-white/5">
-                              <div>
-                                <span className="opacity-50 block mb-0.5">PNR:</span>
-                                <span className="font-bold text-[var(--accent)]">{flight.pnr || "N/A"}</span>
-                              </div>
-                              <div>
-                                <span className="opacity-50 block mb-0.5">Hora:</span>
-                                <span className="font-bold">{flight.time}</span>
-                              </div>
-                            </div>
-                            {flight.tickets && (
-                              <div className="mt-2 text-[10px] opacity-60">
-                                Tickets: {flight.tickets.join(", ")}
-                              </div>
-                            )}
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
+          <div className="space-y-24">
+            {itineraryData.map((day, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                className="relative pl-24"
+              >
+                <div className="absolute left-0 top-0 bottom-[-5rem] w-px bg-slate-200 dark:bg-slate-800">
+                  <div className="w-3 h-3 bg-[var(--accent)] rounded-full -ml-[6px] mt-2 shadow-[0_0_15px_rgba(197,160,89,0.5)]" />
                 </div>
 
-                {day.accommodation && (
-                  <div className="glass p-6 rounded-xl border border-[var(--accent)]/10 h-fit">
-                    <h4 className="text-xs uppercase tracking-widest font-bold mb-4 flex items-center gap-2">
-                      <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h6a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd" /></svg>
-                      Alojamiento
-                    </h4>
-                    <div className="text-lg font-bold mb-1 leading-tight">{day.accommodation.name}</div>
-                    <div className="text-sm text-[var(--text-muted)] mb-3">{day.accommodation.location}</div>
-                    <div className="space-y-3">
-                      <div className="text-xs p-2 bg-[var(--accent)]/5 rounded border border-[var(--accent)]/20">
-                        <span className="font-bold block mb-1">Check-in:</span> {day.accommodation.checkIn}
-                        {day.accommodation.notes && <p className="mt-2 italic opacity-80">{day.accommodation.notes}</p>}
-                      </div>
+                <div className="absolute left-0 top-0 translate-x-[-150%] md:translate-x-[-120%] text-right pt-1 hidden md:block">
+                  <span className="text-[var(--accent)] font-black text-4xl md:text-6xl opacity-40 family-playfair italic">{idx + 1}</span>
+                </div>
 
-                      {day.accommodation.phone && (
-                        <div className="text-xs">
-                          <span className="font-bold block mb-1 opacity-50 uppercase tracking-widest text-[10px]">Contacto:</span>
-                          <a href={`tel:${day.accommodation.phone}`} className="text-[var(--accent)] font-bold hover:underline">{day.accommodation.phone}</a>
+                <div className="mb-6 md:mb-8">
+                  <span className="text-xs font-bold text-[var(--accent)] uppercase tracking-[0.3em] mb-2 block">{day.date}</span>
+                  <h3 className="text-3xl md:text-4xl font-bold family-playfair lowercase tracking-tighter opacity-90">{day.title}</h3>
+                </div>
+
+                <div className="card p-6 md:p-14 overflow-hidden relative shadow-sm hover:shadow-xl group">
+                  <div className="absolute top-0 right-0 w-24 md:w-32 h-24 md:h-32 bg-[var(--accent)]/5 rounded-bl-[100px] transition-all group-hover:scale-110" />
+
+                  <div className="grid md:grid-cols-3 gap-8 md:gap-12">
+                    <div className="md:col-span-2 space-y-8">
+                      {day.activities.map((activity, aIdx) => (
+                        <div key={aIdx} className="flex gap-6 items-start">
+                          {activity.time && <span className="text-xs font-black text-[var(--text-muted)] bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded-full uppercase tracking-widest">{activity.time}</span>}
+                          <div>
+                            <h4 className="font-bold text-xl mb-1">{activity.title}</h4>
+                            <p className="text-[var(--text-muted)] leading-relaxed text-base font-light">{activity.description}</p>
+                          </div>
                         </div>
-                      )}
+                      ))}
 
-                      {(day.accommodation.confirmation || day.accommodation.pin) && (
-                        <div className="text-xs space-y-1">
-                          {day.accommodation.confirmation && (
-                            <div>
-                              <span className="font-bold block mb-1 opacity-50 uppercase tracking-widest text-[10px]">Confirmación:</span>
-                              <span className="font-mono bg-black/5 dark:bg-white/5 px-2 py-0.5 rounded">{day.accommodation.confirmation}</span>
-                            </div>
-                          )}
-                          {day.accommodation.pin && (
-                            <div>
-                              <span className="font-bold block mb-1 opacity-50 uppercase tracking-widest text-[10px]">PIN:</span>
-                              <span className="font-mono bg-black/5 dark:bg-white/5 px-2 py-0.5 rounded">{day.accommodation.pin}</span>
-                            </div>
-                          )}
-                        </div>
-                      )}
-
-                      {day.accommodation.address && (
-                        <div className="text-[10px] opacity-70 border-t border-black/5 dark:border-white/5 pt-2">
-                          <span className="font-bold uppercase tracking-widest block mb-1">Dirección:</span>
-                          {day.accommodation.address}
+                      {day.flights && (
+                        <div className="mt-10 pt-10 border-t border-slate-100 dark:border-slate-800">
+                          <h4 className="text-[10px] uppercase tracking-[0.4em] font-black mb-6 text-[var(--accent)]">Protocolo Aéreo</h4>
+                          <div className="grid sm:grid-cols-2 gap-6">
+                            {day.flights.map((flight, fIdx) => (
+                              <div key={fIdx} className="p-6 bg-slate-50 dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800">
+                                <div className="text-base font-black mb-3 family-playfair italic underline decoration-[var(--accent)]">{flight.airline} {flight.number}</div>
+                                <div className="text-sm text-[var(--text-muted)] opacity-80 font-bold mb-4">{flight.from} → {flight.to}</div>
+                                <div className="flex justify-between items-center text-xs font-black tracking-widest leading-none">
+                                  <div>
+                                    <span className="opacity-40 block mb-1">PNR</span>
+                                    <span className="text-[var(--accent)]">{flight.pnr || "---"}</span>
+                                  </div>
+                                  <div className="text-right">
+                                    <span className="opacity-40 block mb-1">HORA</span>
+                                    <span>{flight.time}</span>
+                                  </div>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
                         </div>
                       )}
                     </div>
+
+                    {day.accommodation && (
+                      <div className="h-fit card p-6 md:p-8 bg-[var(--surface)] border-2 border-[var(--accent)]/10 shadow-lg md:sticky md:top-32 relative z-10">
+                        <span className="text-[var(--accent)] font-bold text-xs uppercase tracking-[0.4em] mb-4 block underline">Residencia</span>
+                        <h4 className="text-2xl md:text-3xl font-black family-playfair italic leading-tight mb-2 lowercase">{day.accommodation.name}</h4>
+                        <p className="text-xs text-[var(--text-muted)] mb-6 opacity-100 font-medium">{day.accommodation.location}</p>
+
+                        <div className="space-y-4">
+                          <div className="text-xs p-5 bg-white dark:bg-black/40 rounded-xl border border-black/10 dark:border-white/10 shadow-inner">
+                            <span className="font-black block mb-2 opacity-60 tracking-[0.1em] text-[var(--text-muted)]">CHECK-IN</span>
+                            <span className="font-bold text-[var(--text)]">{day.accommodation.checkIn}</span>
+                          </div>
+
+                          {day.accommodation.phone && (
+                            <div className="flex justify-between items-center px-1">
+                              <span className="text-[10px] font-black opacity-40">TEL</span>
+                              <a href={`tel:${day.accommodation.phone}`} className="text-xs font-black hover:text-[var(--accent)] text-[var(--text)]">{day.accommodation.phone}</a>
+                            </div>
+                          )}
+
+                          {day.accommodation.confirmation && (
+                            <div className="flex justify-between items-center px-1">
+                              <span className="text-[10px] font-black opacity-40">BOOKING</span>
+                              <span className="text-xs font-mono font-bold tracking-tighter text-[var(--accent)]">{day.accommodation.confirmation}</span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
-            </div>
-          ))}
+                </div>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="py-24 bg-[var(--primary)] text-white/60 px-6 text-center border-t border-white/5">
-        <div className="text-2xl font-black text-white uppercase tracking-tighter mb-4">Guatemala</div>
-        <p className="text-sm max-w-md mx-auto mb-8">
-          Creado con pasión para que vivas la experiencia más auténtica en la tierra del Quetzal.
-        </p>
-        <div className="text-[10px] uppercase tracking-[0.3em] font-bold">
-          Buen Viaje • 2026
+      <footer className="py-24 md:py-40 bg-[var(--primary)] text-white/60 px-6 text-center border-t border-white/5 overflow-hidden relative">
+        <div className="absolute inset-0 z-0 flex items-center justify-center opacity-[0.03]">
+          <span className="text-[20vw] font-black family-playfair uppercase italic leading-none whitespace-nowrap">GUATEMALA</span>
+        </div>
+        <div className="relative z-10">
+          <div className="text-3xl md:text-4xl font-black text-white uppercase tracking-tighter family-playfair italic leading-none mb-4 lowercase">guatemala.</div>
+          <p className="text-xs max-w-md mx-auto mb-12 md:mb-16 tracking-widest font-light opacity-80 leading-relaxed uppercase">
+            Curated by Elite Travel Agency • 2026 Edition
+          </p>
+          <div className="flex flex-wrap justify-center gap-6 md:gap-10 text-[10px] font-black tracking-[0.3em] md:tracking-[0.5em] mb-12 md:mb-16 text-white/70">
+            <span className="text-[var(--accent)]">TIKAL</span>
+            <span>ANTIGUA</span>
+            <span>ATITLAN</span>
+            <span className="text-[var(--accent)]">GUATEMALA</span>
+          </div>
+          <div className="text-[8px] md:text-[10px] uppercase tracking-[0.3em] md:tracking-[0.5em] font-black border-t border-white/10 pt-12 md:pt-16 inline-block opacity-50">
+            Explora Responsablemente • Vive Intensamente
+          </div>
         </div>
       </footer>
     </main>
